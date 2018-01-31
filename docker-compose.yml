@@ -1,0 +1,21 @@
+version: "3"
+services:
+
+  jupyter:
+    build:
+      context: ./jupyter
+    ports:
+      - "8888:8888"
+    links:
+      - postgis
+    volumes:
+          - "./notebooks:/notebooks" 
+          - "./data:/data"
+
+  postgis:
+    image: mdillon/postgis
+    restart: always
+    environment:
+      POSTGRES_USER: data
+      POSTGRES_PASSWORD: data
+      POSTGRES_DB: data
