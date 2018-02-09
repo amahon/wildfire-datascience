@@ -22,9 +22,6 @@ RUN apt-get update && apt-get install -y \
 RUN git clone https://github.com/mapbox/tippecanoe.git \
       && cd tippecanoe && make all && make install
 
-RUN git clone https://github.com/uber/h3.git \
-      && cd h3 && cmake . && make && make install
-
 RUN pip install -U geopandas \
                    geopy \
                    rtree \
@@ -52,12 +49,27 @@ RUN pip install -U geopandas \
                    jupyter_contrib_nbextensions \
                    jupyter_nbextensions_configurator \
                    palettable \
-                   graphviz
+                   graphviz \
+                   rasterio==1.0a12 \
+                   nbdime \
+                   rasterstats \
+                   mca \
+                   catboost \
+                   imbalanced-learn
+
+RUN mkdir /tools && chown -R $NB_USER /tools
 
 USER $NB_USER
 
+RUN cd /tools && git clone https://github.com/uber/h3.git \
+      && cd h3 && cmake . && make && make kml
+
 RUN jupyter contrib nbextension install --user
 RUN jupyter nbextensions_configurator enable --user
+RUN jupyter serverextension enable --py nbdime --user
+RUN jupyter nbextension install --py nbdime --user
+RUN jupyter nbextension enable --py nbdime --user
+
 
 ADD fonts /usr/share/fonts/truetype/
 

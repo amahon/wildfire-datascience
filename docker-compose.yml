@@ -1,4 +1,4 @@
-version: "3"
+version: "2"
 services:
 
   jupyter:
@@ -11,6 +11,8 @@ services:
     volumes:
           - "./notebooks:/notebooks" 
           - "./data:/data"
+          - home-volume:/home
+    mem_limit: 16G
 
   postgis:
     image: mdillon/postgis
@@ -19,3 +21,7 @@ services:
       POSTGRES_USER: data
       POSTGRES_PASSWORD: data
       POSTGRES_DB: data
+
+volumes:
+  home-volume:
+    external: false
