@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
 RUN git clone https://github.com/mapbox/tippecanoe.git \
       && cd tippecanoe && make all && make install
 
-RUN pip install -U geopandas \
+RUN pip install -U git+git://github.com/geopandas/geopandas.git#egg=geopandas \
                    geopy \
                    rtree \
                    folium \
@@ -70,11 +70,12 @@ RUN jupyter serverextension enable --py nbdime --user
 RUN jupyter nbextension install --py nbdime --user
 RUN jupyter nbextension enable --py nbdime --user
 
-
 ADD fonts /usr/share/fonts/truetype/
 
 RUN fc-cache
 RUN fc-list
+
+RUN rm -rf ~/.cache/matplotlib/fontList.*
 
 VOLUME /notebooks
 WORKDIR /notebooks
